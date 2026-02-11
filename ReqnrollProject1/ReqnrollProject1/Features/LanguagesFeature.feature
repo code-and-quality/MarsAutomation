@@ -22,34 +22,43 @@ Examples:
     | abc@mail.com| password   |
     | susmitha.pinki@gmail.com  | 123123  |
 
-Scenario: create a language record with valid data
-	Given I login Mars portal Successfully
-	When I navigate to language page 
-	When I create Language record
-	Then the record should be created successfully
-
-Scenario Outline: edit a specific language record
-    Given I login Mars portal Successfully
-    When I navigate to language page
-    And I edit the language "<existingLanguage>" to "<newLanguage>" with "<newLevel>"
-     Then the Language record should be updated to "<newLanguage>" with level "<newLevel>"
-
-Examples:
-    | existingLanguage| newLanguage    | newLevel          |
-    | Tamil    | Kannada | Conversational |
-    | English  | French  | Basic          |
+Scenario Outline: Create a language with Valid data
+Given I am on the language page
+When I create a language "<newLanguage>" with level "<newLevel>"
+Then the language "<newLanguage>"with Level "<newLevel>" should be created
 
 
- Scenario Outline: delete an existing language record
-    Given I login Mars portal Successfully
-    When I navigate to language page
-    And I delete the language "<Language>"
-    Then the "<Language>" reord should be deleted successfully
+Examples: 
+| newLanguage    | newLevel |
+| Tulu           |    Basic      |
+| Telugu          |   Fluent     |
 
+
+
+Scenario Outline: Update a language and level
+  Given  I am on the language page
+  When I add a language "<newLanguage>" with level "<newLevel>"
+  And I update the language "<newLanguage>" to "<updatedLanguage>" with level "<updatedLevel>"
+  Then the language "<updatedLanguage>" with level "<updatedLevel>" should be displayed
 
 Examples:
-    | Language | 
-    | Kannada  |
+  | newLanguage | newLevel | updatedLanguage | updatedLevel |
+  | English     | Basic    | French          | Fluent       |
+  |   Hindi          |   Basic       |    Malayalam             |    Fluent          |
+
+
+Scenario Outline: Delete an existing language record
+  Given I am on the language page
+  When I add a language "<newLanguage>" with level "<newLevel>"
+  When I delete the language "<newLanguage>"
+  Then the "<newLanguge>" reord should be deleted successfully
+
+  Examples:
+  | newLanguage | newLevel |
+  | Tamil       | Fluent |
+  | Telugu      | Basic   |
+
+
 
 Scenario: User cannot add more than four languages
     Given I login Mars portal Successfully

@@ -106,7 +106,7 @@ namespace MarsAutomation.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/SkillsFeature.feature.ndjson", 11);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/SkillsFeature.feature.ndjson", 13);
         }
         
         [global::NUnit.Framework.TestAttribute()]
@@ -183,13 +183,17 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
         }
         
         [global::NUnit.Framework.TestAttribute()]
-        [global::NUnit.Framework.DescriptionAttribute("create a skills record with valid data")]
-        public async global::System.Threading.Tasks.Task CreateASkillsRecordWithValidData()
+        [global::NUnit.Framework.DescriptionAttribute("Create a skill with Valid data")]
+        [global::NUnit.Framework.TestCaseAttribute("JAVA", "Beginner", "4", null)]
+        [global::NUnit.Framework.TestCaseAttribute("SQL", "Expert", "5", null)]
+        public async global::System.Threading.Tasks.Task CreateASkillWithValidData(string newSkill, string newLevel, string @__pickleIndex, string[] exampleTags)
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = exampleTags;
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "4";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("create a skills record with valid data", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            argumentsOfScenario.Add("newSkill", newSkill);
+            argumentsOfScenario.Add("newLevel", newLevel);
+            string pickleIndex = @__pickleIndex;
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Create a skill with Valid data", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 25
@@ -203,37 +207,75 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             {
                 await this.ScenarioStartAsync();
 #line 26
- await testRunner.GivenAsync("I login Mars portal Successfully", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+await testRunner.GivenAsync("I am on the skills page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 27
- await testRunner.WhenAsync("I navigate to skills page", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+await testRunner.WhenAsync(string.Format("I add a skill \"{0}\" with level \"{1}\"", newSkill, newLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 28
- await testRunner.WhenAsync("I create skills record", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 29
- await testRunner.ThenAsync("the Skill record should be created successfully", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+await testRunner.ThenAsync(string.Format("the skill \"{0}\"with Level \"{1}\" should be created", newSkill, newLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
         [global::NUnit.Framework.TestAttribute()]
-        [global::NUnit.Framework.DescriptionAttribute("edit a specific skill record")]
-        [global::NUnit.Framework.TestCaseAttribute("JAVA", "DotNet", "Expert", "5", null)]
-        [global::NUnit.Framework.TestCaseAttribute("HTML", "Python", "Beginner", "6", null)]
-        public async global::System.Threading.Tasks.Task EditASpecificSkillRecord(string existingSkill, string newSkill, string newLevel, string @__pickleIndex, string[] exampleTags)
+        [global::NUnit.Framework.DescriptionAttribute("Edit a Skill record")]
+        [global::NUnit.Framework.TestCaseAttribute("DotNet", "Beginner", "PLSQL", "Expert", "6", null)]
+        [global::NUnit.Framework.TestCaseAttribute("Gherkin", "Beginner", "Pearl", "Expert", "7", null)]
+        public async global::System.Threading.Tasks.Task EditASkillRecord(string newSkill, string newLevel, string updatedSkill, string updatedLevel, string @__pickleIndex, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("existingSkill", existingSkill);
+            argumentsOfScenario.Add("newSkill", newSkill);
+            argumentsOfScenario.Add("newLevel", newLevel);
+            argumentsOfScenario.Add("updatedSkill", updatedSkill);
+            argumentsOfScenario.Add("updatedLevel", updatedLevel);
+            string pickleIndex = @__pickleIndex;
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Edit a Skill record", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 37
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 38
+await testRunner.GivenAsync("I am on the skills page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 39
+await testRunner.WhenAsync(string.Format("I add a skill \"{0}\" with level \"{1}\"", newSkill, newLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 40
+await testRunner.AndAsync(string.Format("I edit the skill \"{0}\" to \"{1}\" with \"{2}\"", newSkill, updatedSkill, updatedLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 41
+await testRunner.ThenAsync(string.Format("the Skill record should be updated to \"{0}\" with level \"{1}\"", updatedSkill, updatedLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::NUnit.Framework.TestAttribute()]
+        [global::NUnit.Framework.DescriptionAttribute("Delete an Skill record")]
+        [global::NUnit.Framework.TestCaseAttribute("JAVA", "Beginner", "8", null)]
+        [global::NUnit.Framework.TestCaseAttribute("SQL", "Expert", "9", null)]
+        public async global::System.Threading.Tasks.Task DeleteAnSkillRecord(string newSkill, string newLevel, string @__pickleIndex, string[] exampleTags)
+        {
+            string[] tagsOfScenario = exampleTags;
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             argumentsOfScenario.Add("newSkill", newSkill);
             argumentsOfScenario.Add("newLevel", newLevel);
             string pickleIndex = @__pickleIndex;
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("edit a specific skill record", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Delete an Skill record", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 31
+#line 51
 this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -243,55 +285,17 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 32
-    await testRunner.GivenAsync("I login Mars portal Successfully", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line 52
+  await testRunner.GivenAsync("I am on the skills page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 33
-    await testRunner.WhenAsync("I navigate to skills page", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line 53
+  await testRunner.WhenAsync(string.Format("I add a skill \"{0}\" with level \"{1}\"", newSkill, newLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 34
-    await testRunner.AndAsync(string.Format("I edit the skill \"{0}\" to \"{1}\" with \"{2}\"", existingSkill, newSkill, newLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line 54
+  await testRunner.WhenAsync(string.Format("I delete the skill \"{0}\"", newSkill), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 35
-    await testRunner.ThenAsync(string.Format("the Skill record should be updated to \"{0}\" with level \"{1}\"", newSkill, newLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-            }
-            await this.ScenarioCleanupAsync();
-        }
-        
-        [global::NUnit.Framework.TestAttribute()]
-        [global::NUnit.Framework.DescriptionAttribute("delete an existing skill record")]
-        [global::NUnit.Framework.TestCaseAttribute("JAVA", "7", null)]
-        public async global::System.Threading.Tasks.Task DeleteAnExistingSkillRecord(string skill, string @__pickleIndex, string[] exampleTags)
-        {
-            string[] tagsOfScenario = exampleTags;
-            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("Skill", skill);
-            string pickleIndex = @__pickleIndex;
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("delete an existing skill record", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
-            string[] tagsOfRule = ((string[])(null));
-            global::Reqnroll.RuleInfo ruleInfo = null;
-#line 44
-this.ScenarioInitialize(scenarioInfo, ruleInfo);
-#line hidden
-            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                await testRunner.SkipScenarioAsync();
-            }
-            else
-            {
-                await this.ScenarioStartAsync();
-#line 45
-    await testRunner.GivenAsync("I login Mars portal Successfully", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 46
-    await testRunner.WhenAsync("I navigate to skills page", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 47
-    await testRunner.AndAsync(string.Format("I delete the Skill \"{0}\"", skill), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 48
-    await testRunner.ThenAsync(string.Format("the \"{0}\" record should be removed successfully", skill), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 55
+  await testRunner.ThenAsync(string.Format("the \"{0}\" skill record should be removed successfully", newSkill), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -299,7 +303,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("prevent adding duplicate skill")]
-        [global::NUnit.Framework.TestCaseAttribute("Python", "Beginner", "8", null)]
+        [global::NUnit.Framework.TestCaseAttribute("Python", "Beginner", "10", null)]
         public async global::System.Threading.Tasks.Task PreventAddingDuplicateSkill(string skill, string level, string @__pickleIndex, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
@@ -310,7 +314,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("prevent adding duplicate skill", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 54
+#line 64
 this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -320,16 +324,16 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 55
+#line 65
     await testRunner.GivenAsync("I login Mars portal Successfully", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 56
+#line 66
     await testRunner.WhenAsync("I navigate to skills page", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 57
+#line 67
     await testRunner.AndAsync(string.Format("I try to add the skill \"{0}\" with level \"{1}\" again", skill, level), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 58
+#line 68
     await testRunner.ThenAsync("a duplicate skill warning should be displayed", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }

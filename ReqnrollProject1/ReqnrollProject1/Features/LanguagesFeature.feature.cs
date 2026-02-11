@@ -106,7 +106,7 @@ namespace MarsAutomation.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/LanguagesFeature.feature.ndjson", 12);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/LanguagesFeature.feature.ndjson", 14);
         }
         
         [global::NUnit.Framework.TestAttribute()]
@@ -183,13 +183,17 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
         }
         
         [global::NUnit.Framework.TestAttribute()]
-        [global::NUnit.Framework.DescriptionAttribute("create a language record with valid data")]
-        public async global::System.Threading.Tasks.Task CreateALanguageRecordWithValidData()
+        [global::NUnit.Framework.DescriptionAttribute("Create a language with Valid data")]
+        [global::NUnit.Framework.TestCaseAttribute("Tulu", "Basic", "4", null)]
+        [global::NUnit.Framework.TestCaseAttribute("Telugu", "Fluent", "5", null)]
+        public async global::System.Threading.Tasks.Task CreateALanguageWithValidData(string newLanguage, string newLevel, string @__pickleIndex, string[] exampleTags)
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = exampleTags;
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "4";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("create a language record with valid data", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            argumentsOfScenario.Add("newLanguage", newLanguage);
+            argumentsOfScenario.Add("newLevel", newLevel);
+            string pickleIndex = @__pickleIndex;
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Create a language with Valid data", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 25
@@ -203,37 +207,35 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             {
                 await this.ScenarioStartAsync();
 #line 26
- await testRunner.GivenAsync("I login Mars portal Successfully", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+await testRunner.GivenAsync("I am on the language page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 27
- await testRunner.WhenAsync("I navigate to language page", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+await testRunner.WhenAsync(string.Format("I create a language \"{0}\" with level \"{1}\"", newLanguage, newLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 28
- await testRunner.WhenAsync("I create Language record", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 29
- await testRunner.ThenAsync("the record should be created successfully", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+await testRunner.ThenAsync(string.Format("the language \"{0}\"with Level \"{1}\" should be created", newLanguage, newLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
         [global::NUnit.Framework.TestAttribute()]
-        [global::NUnit.Framework.DescriptionAttribute("edit a specific language record")]
-        [global::NUnit.Framework.TestCaseAttribute("Tamil", "Kannada", "Conversational", "5", null)]
-        [global::NUnit.Framework.TestCaseAttribute("English", "French", "Basic", "6", null)]
-        public async global::System.Threading.Tasks.Task EditASpecificLanguageRecord(string existingLanguage, string newLanguage, string newLevel, string @__pickleIndex, string[] exampleTags)
+        [global::NUnit.Framework.DescriptionAttribute("Update a language and level")]
+        [global::NUnit.Framework.TestCaseAttribute("English", "Basic", "French", "Fluent", "6", null)]
+        [global::NUnit.Framework.TestCaseAttribute("Hindi", "Basic", "Malayalam", "Fluent", "7", null)]
+        public async global::System.Threading.Tasks.Task UpdateALanguageAndLevel(string newLanguage, string newLevel, string updatedLanguage, string updatedLevel, string @__pickleIndex, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("existingLanguage", existingLanguage);
             argumentsOfScenario.Add("newLanguage", newLanguage);
             argumentsOfScenario.Add("newLevel", newLevel);
+            argumentsOfScenario.Add("updatedLanguage", updatedLanguage);
+            argumentsOfScenario.Add("updatedLevel", updatedLevel);
             string pickleIndex = @__pickleIndex;
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("edit a specific language record", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Update a language and level", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 31
+#line 38
 this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -243,36 +245,38 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 32
-    await testRunner.GivenAsync("I login Mars portal Successfully", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line 39
+  await testRunner.GivenAsync("I am on the language page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 33
-    await testRunner.WhenAsync("I navigate to language page", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line 40
+  await testRunner.WhenAsync(string.Format("I add a language \"{0}\" with level \"{1}\"", newLanguage, newLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 34
-    await testRunner.AndAsync(string.Format("I edit the language \"{0}\" to \"{1}\" with \"{2}\"", existingLanguage, newLanguage, newLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line 41
+  await testRunner.AndAsync(string.Format("I update the language \"{0}\" to \"{1}\" with level \"{2}\"", newLanguage, updatedLanguage, updatedLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 35
-     await testRunner.ThenAsync(string.Format("the Language record should be updated to \"{0}\" with level \"{1}\"", newLanguage, newLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 42
+  await testRunner.ThenAsync(string.Format("the language \"{0}\" with level \"{1}\" should be displayed", updatedLanguage, updatedLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
         [global::NUnit.Framework.TestAttribute()]
-        [global::NUnit.Framework.DescriptionAttribute("delete an existing language record")]
-        [global::NUnit.Framework.TestCaseAttribute("Kannada", "7", null)]
-        public async global::System.Threading.Tasks.Task DeleteAnExistingLanguageRecord(string language, string @__pickleIndex, string[] exampleTags)
+        [global::NUnit.Framework.DescriptionAttribute("Delete an existing language record")]
+        [global::NUnit.Framework.TestCaseAttribute("Tamil", "Fluent", "8", null)]
+        [global::NUnit.Framework.TestCaseAttribute("Telugu", "Basic", "9", null)]
+        public async global::System.Threading.Tasks.Task DeleteAnExistingLanguageRecord(string newLanguage, string newLevel, string @__pickleIndex, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("Language", language);
+            argumentsOfScenario.Add("newLanguage", newLanguage);
+            argumentsOfScenario.Add("newLevel", newLevel);
             string pickleIndex = @__pickleIndex;
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("delete an existing language record", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Delete an existing language record", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 43
- this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line 50
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
             {
@@ -281,17 +285,17 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 44
-    await testRunner.GivenAsync("I login Mars portal Successfully", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line 51
+  await testRunner.GivenAsync("I am on the language page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 45
-    await testRunner.WhenAsync("I navigate to language page", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line 52
+  await testRunner.WhenAsync(string.Format("I add a language \"{0}\" with level \"{1}\"", newLanguage, newLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 46
-    await testRunner.AndAsync(string.Format("I delete the language \"{0}\"", language), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line 53
+  await testRunner.WhenAsync(string.Format("I delete the language \"{0}\"", newLanguage), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 47
-    await testRunner.ThenAsync(string.Format("the \"{0}\" reord should be deleted successfully", language), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 54
+  await testRunner.ThenAsync("the \"<newLanguge>\" reord should be deleted successfully", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -303,11 +307,11 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "8";
+            string pickleIndex = "10";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("User cannot add more than four languages", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 54
+#line 63
 this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -317,16 +321,16 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 55
+#line 64
     await testRunner.GivenAsync("I login Mars portal Successfully", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 56
+#line 65
     await testRunner.WhenAsync("I navigate to language page", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 57
+#line 66
     await testRunner.AndAsync("I add languages until the limit is reached", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 58
+#line 67
     await testRunner.ThenAsync("the Add New button should not be visible", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
@@ -335,7 +339,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("prevent adding duplicate language")]
-        [global::NUnit.Framework.TestCaseAttribute("French", "Basic", "9", null)]
+        [global::NUnit.Framework.TestCaseAttribute("French", "Basic", "11", null)]
         public async global::System.Threading.Tasks.Task PreventAddingDuplicateLanguage(string language, string level, string @__pickleIndex, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
@@ -346,7 +350,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("prevent adding duplicate language", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 60
+#line 69
 this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -356,16 +360,16 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 61
+#line 70
     await testRunner.GivenAsync("I login Mars portal Successfully", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 62
+#line 71
     await testRunner.WhenAsync("I navigate to language page", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 63
+#line 72
     await testRunner.AndAsync(string.Format("I try to add the language \"{0}\" with level \"{1}\" again", language, level), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 64
+#line 73
     await testRunner.ThenAsync("a duplicate language warning should be displayed", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }

@@ -15,41 +15,50 @@ namespace MarsAutomation.StepDefinitions
         [When("I navigate to skills page")]
         public void WhenINavigateToSkillsPage()
         {
-            HomePage HomePageObj = new HomePage();
-            HomePageObj.NavigateToSkills(driver);
+            HomePage HomePageObj = new HomePage(driver);
+            HomePageObj.NavigateToSkills();
+        }
+
+        [Given("I am on the skills page")]
+        public void GivenIAmOnTheSkillsPage()
+        {
+
+            HomePage HomePageObj = new HomePage(driver);
+            HomePageObj.NavigateToSkills();
         }
 
 
 
-        [When("I create skills record")]
-        public void WhenICreateSkillsRecord()
+        [When("I add a skill {string} with level {string}")]
+        public void WhenIAddASkillWithLevel(string newSkill, string newLevel)
         {
-           
             SkillsPage SkillsPageObj = new SkillsPage(driver);
-            SkillsPageObj.CreateSkillsRecord(driver);
+            SkillsPageObj.AddSkill(newSkill, newLevel);
+            TestDataManager.AddSkill(newSkill);
         }
 
 
 
-        [Then("the Skill record should be created successfully")]
-        public void ThenTheSkillRecordShouldBeCreatedSuccessfully()
+        [Then("the skill {string}with Level {string} should be created")]
+        public void ThenTheSkillWithLevelShouldBeCreated(string newSkill, string newLevel)
         {
-            SkillsPage skillsPageObj = new SkillsPage(driver);
 
-            // create record Assertions
-            String newSkill = skillsPageObj.GetSkill(driver);
-            Assert.That(newSkill == "JAVA", "Actual Skill and expected Skill is do not match");
-            String newLevel = skillsPageObj.GetLevel(driver);
-            Assert.That(newLevel == "Expert", "Actual Level and expected Level is do not match");
+            SkillsPage SkillsPageObj = new SkillsPage(driver);
+            string actualSkill = SkillsPageObj.GetSkill(newSkill);
+            Assert.That(actualSkill== newSkill, $"Expected Skill: {newSkill}, but got: {actualSkill}");
+
+            string actualLevel = SkillsPageObj.GetLevel(newLevel);
+            Assert.That(actualLevel == newLevel, $"Expected Level: {newLevel}, but got: {actualLevel}");
         }
-
-
+        
 
         [When("I edit the skill {string} to {string} with {string}")]
         public void WhenIEditTheSkillToWith(string existingSkill, string newSkill, string newLevel)
         {
             SkillsPage skillPageObj = new SkillsPage(driver);
-            skillPageObj.EditSkillRecord(driver, existingSkill, newSkill, newLevel);
+            skillPageObj.EditSkillRecord(existingSkill, newSkill, newLevel);
+            TestDataManager.AddSkill(newSkill);
+
         }
 
 
@@ -58,36 +67,38 @@ namespace MarsAutomation.StepDefinitions
         {
             SkillsPage skillsPageObj = new SkillsPage(driver);
 
-            string actualSkill = skillsPageObj.GetUpdatedSkill(driver, newSkill);
+            string actualSkill = skillsPageObj.GetUpdatedSkill(newSkill);
             Assert.That(actualSkill == newSkill, $"Expected Skill: {newSkill}, but got: {actualSkill}");
 
-            string actualLevel = skillsPageObj.GetUpdatedSkillsLevel(driver, newLevel);
+            string actualLevel = skillsPageObj.GetUpdatedSkillsLevel(newLevel);
             Assert.That(actualLevel == newLevel, $"Expected Level: {newLevel}, but got: {actualLevel}");
         }
 
-
-
-        [When("I delete the Skill {string}")]
+        [When("I delete the skill {string}")]
         public void WhenIDeleteTheSkill(string skill)
         {
+
             SkillsPage skillPageObj = new SkillsPage(driver);
-            skillPageObj.DeleteSkillRecord(driver, skill);
+            skillPageObj.DeleteSkill(skill);
         }
 
 
-        [Then("the {string} record should be removed successfully")]
-        public void ThenTheDeletedSkillRecordShouldBeRemovedSuccessfully(string Skill)
+        [Then("the {string} skill record should be removed successfully")]
+        public void ThenTheSkillRecordShouldBeRemovedSuccessfully(string skill)
         {
             SkillsPage skillsPageObj = new SkillsPage(driver);
-            Assert.That(skillsPageObj.IsSkillDeleted(driver, Skill),
+            Assert.That(skillsPageObj.IsSkillDeleted(skill),
                 "Skill record was not deleted");
         }
+
+
+
 
         [When("I try to add the skill {string} with level {string} again")]
         public void WhenITryToAddTheSkillWithLevelAgain(string skill, string level)
         {
             SkillsPage skillsPageObj = new SkillsPage(driver);
-            skillsPageObj.AddDuplicateSkill(driver, skill, level);
+            skillsPageObj.AddDuplicateSkill(skill, level);
         }
 
         [Then("a duplicate skill warning should be displayed")]
@@ -99,9 +110,6 @@ namespace MarsAutomation.StepDefinitions
              message.ToLower().Contains("already exist"),
              $"Duplicate validation message was not displayed. Actual message: '{message}'");
         }
-
-
-
 
 
     }

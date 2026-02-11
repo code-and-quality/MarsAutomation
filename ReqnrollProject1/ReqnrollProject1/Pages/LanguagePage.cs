@@ -31,13 +31,13 @@ namespace MarsAutomation.Pages
             languagesTab.Click();
             Wait.WaitToBeClickable(driver, "XPath", "//a[@data-tab='first']", 4);
         }
-        public int GetLanguageCount(IWebDriver driver)
+        public int GetLanguageCount()
         {
             var rows = driver.FindElements(By.XPath("//th[normalize-space()='Language']/ancestor::table[1]//tbody/tr"));
             return rows.Count;
         }
 
-        public void AddLanguage(IWebDriver driver, string language, string level)
+        public void AddLanguage(string language, string level)
         {
             // Find Add New button
             var addNewButtons = driver.FindElements(By.XPath("//table[.//th[text()='Language']]//div[contains(@class,'ui teal button')]"));
@@ -71,7 +71,7 @@ namespace MarsAutomation.Pages
         }
 
         //Create a Languages Record
-        public void CreateLanguageRecord(IWebDriver driver)
+        public void CreateLanguageRecord()
         {
 
 
@@ -111,32 +111,25 @@ namespace MarsAutomation.Pages
             //Navigate the Add button and Click
             IWebElement addTab = driver.FindElement(By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/div/div[3]/input[1]"));
             addTab.Click();
-            Thread.Sleep(4000);
+            Thread.Sleep(5000);
 
 
         
         }
-        public string GetLanguage(IWebDriver driver)
-           {
-            IWebElement newLanguage = driver.FindElement(By.XPath("((//th[normalize-space()='Language']\r\n " +
-                   "     /ancestor::table[1]\r\n    " +
-                   "  //tbody/tr[td[normalize-space()]]\r\n)[last()]/td[1])"));
-            return newLanguage.Text;
-           }
-        public string GetLevel(IWebDriver driver)
-           {
-            IWebElement newLevel = driver.FindElement(By.XPath("((//th[normalize-space()='Language']\r\n    " +
-                 "  /ancestor::table[1]\r\n    " +
-                 "  //tbody/tr[td[normalize-space()]]\r\n)[last()]/td[2])"));
-            return newLevel.Text;
 
-           }
+        public String GetLanguage(string newLanguage)
+        {
+            IWebElement createdLanguage = driver.FindElement(By.XPath($"//table[.//th[normalize-space()='Language']]//td[normalize-space()='{newLanguage}']"));
+            return createdLanguage.Text;
+        }
+        public String GetLevel(string newLevel)
+        {
+            IWebElement createdLevel = driver.FindElement(By.XPath($"//table[.//th[normalize-space()='Language']]//td[normalize-space()='{newLevel}']"));
+            return createdLevel.Text;
 
-
-
-       
-
-        public void EditLanguageRecord(IWebDriver driver, string existingLanguage, string newLanguage, string newLevel)
+        }
+      
+        public void EditLanguageRecord(string existingLanguage, string newLanguage, string newLevel)
         {
             try
             {
@@ -168,7 +161,7 @@ namespace MarsAutomation.Pages
             driver.FindElement(By.XPath("//input[@value='Update']")).Click();
             Thread.Sleep(5000);
         }
-        public String GetUpdatedLanguage(IWebDriver driver, string expectedLanguage)
+        public String GetUpdatedLanguage(string expectedLanguage)
         {
             IWebElement updatedLanguage = driver.FindElement(By.XPath($"//table[.//th[normalize-space()='Language']]//td[normalize-space()='{expectedLanguage}']"));
             return updatedLanguage.Text;
@@ -180,7 +173,26 @@ namespace MarsAutomation.Pages
 
         }
 
-        public void DeleteLanguageRecord(IWebDriver driver, string languageToDelete)
+        public void DeleteLanguage(string language)
+        {
+            try
+            {
+                string deleteXPath =
+                    $"//table/tbody/tr[td[1][normalize-space()='{language}']]/td[3]/span[2]/i";
+
+                IWebElement deleteButton = driver.FindElement(By.XPath(deleteXPath));
+                deleteButton.Click();
+
+                Thread.Sleep(500); // allow UI to refresh
+            }
+            catch (NoSuchElementException)
+            {
+                Console.WriteLine($"Language '{language}' not found for deletion.");
+            }
+        }
+
+
+        public void DeleteLanguageRecord(string languageToDelete)
         {
             try
             { // Navigate to Languages tab
@@ -201,7 +213,7 @@ namespace MarsAutomation.Pages
 
 
             }
-        public bool IsLanguageDeleted(IWebDriver driver, string language)
+        public bool IsLanguageDeleted(string language)
         {
             var rows = driver.FindElements(By.XPath(
                 $"//th[normalize-space()='Language']/ancestor::table[1]" +
@@ -211,7 +223,7 @@ namespace MarsAutomation.Pages
             return rows.Count == 0;
         }
 
-        public void AddDuplicateLanguage(IWebDriver driver, string language, string level)
+        public void AddDuplicateLanguage(string language, string level)
         {
 
             // Navigate to Languages tab
@@ -235,7 +247,7 @@ namespace MarsAutomation.Pages
             
         }
 
-        public string GetNotificationMessageViaJS(IWebDriver driver)
+        public string GetNotificationMessageViaJS()
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
 
@@ -246,13 +258,13 @@ namespace MarsAutomation.Pages
         }
 
 
-        public string GetDuplicateErrorMessage(IWebDriver driver)
+        public string GetDuplicateErrorMessage()
         {
             IWebElement message = driver.FindElement(By.XPath("//div[contains(@class,'ns-box') and contains(@class,'ns-show')]//div[@class='ns-box-inner']"));
             return message.Text;
         }
 
-        public string GetNotificationMessage(IWebDriver driver)
+        public string GetNotificationMessage()
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
             IWebElement messageBox = wait.Until(

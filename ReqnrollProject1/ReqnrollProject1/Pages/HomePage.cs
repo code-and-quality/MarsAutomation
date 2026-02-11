@@ -7,7 +7,14 @@ namespace MarsAutomation.Pages;
 
 public class HomePage
 {
-    public bool IsLoggedIn(IWebDriver driver)
+
+    private readonly IWebDriver driver;
+
+    public HomePage(IWebDriver driver)
+    {
+        this.driver = driver;
+    }
+    public bool IsLoggedIn()
     {
         WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
 
@@ -26,7 +33,7 @@ public class HomePage
         }
     }
    
-    public void NavigateToLanguages(IWebDriver driver)
+    public void NavigateToLanguages()
      {
          IWebElement languagesTab =
              driver.FindElement(
@@ -37,7 +44,7 @@ public class HomePage
 
      }
    
-    public void NavigateToSkills(IWebDriver driver)
+    public void NavigateToSkills()
     {
         IWebElement SkillsTab =
             driver.FindElement(

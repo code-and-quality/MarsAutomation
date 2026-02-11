@@ -22,34 +22,44 @@ Examples:
     | abc@mail.com| password   |
     | susmitha.pinki@gmail.com  | 123123  |
 
-Scenario: create a skills record with valid data
-	Given I login Mars portal Successfully
-	When I navigate to skills page 
-	When I create skills record
-	Then the Skill record should be created successfully
-
-Scenario Outline: edit a specific skill record
-    Given I login Mars portal Successfully
-    When I navigate to skills page
-    And I edit the skill "<existingSkill>" to "<newSkill>" with "<newLevel>"
-    Then the Skill record should be updated to "<newSkill>" with level "<newLevel>"
+Scenario Outline: Create a skill with Valid data
+Given I am on the skills page
+When I add a skill "<newSkill>" with level "<newLevel>"
+Then the skill "<newSkill>"with Level "<newLevel>" should be created
 
 
-    
-Examples:
-    | existingSkill| newSkill   | newLevel          |
-    | JAVA   | DotNet | Expert |
-    | HTML | Python | Beginner         |
+Examples: 
+| newSkill      | newLevel |
+| JAVA         |    Beginner   |
+| SQL      |   Expert   |
 
-Scenario Outline: delete an existing skill record
-    Given I login Mars portal Successfully
-    When I navigate to skills page
-    And I delete the Skill "<Skill>"
-    Then the "<Skill>" record should be removed successfully
 
-Examples:
-    | Skill |
-    | JAVA  |
+Scenario Outline: Edit a Skill record
+Given I am on the skills page
+When I add a skill "<newSkill>" with level "<newLevel>"
+And I edit the skill "<newSkill>" to "<updatedSkill>" with "<updatedLevel>"
+Then the Skill record should be updated to "<updatedSkill>" with level "<updatedLevel>"
+
+Examples: 
+| newSkill | newLevel      |     updatedSkill |       updatedLevel |
+| DotNet   | Beginner      |     PLSQL        |       Expert       |
+|  Gherkin |   Beginner    |     Pearl        |       Expert       |
+
+
+
+   
+Scenario Outline: Delete an Skill record
+  Given I am on the skills page
+  When I add a skill "<newSkill>" with level "<newLevel>"
+  When I delete the skill "<newSkill>"
+  Then the "<newSkill>" skill record should be removed successfully
+
+  Examples:
+  | newSkill | newLevel |
+  | JAVA     | Beginner  |
+  | SQL     | Expert  |
+
+
 
 Scenario Outline: prevent adding duplicate skill
     Given I login Mars portal Successfully

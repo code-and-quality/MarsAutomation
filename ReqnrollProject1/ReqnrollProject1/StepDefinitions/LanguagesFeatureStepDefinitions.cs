@@ -1,5 +1,6 @@
 using MarsAutomation.Pages;
 using MarsAutomation.Utilities;
+using MarsAutomation.Hooks;
 using MarsAutomations.Pages;
 using NUnit.Framework;
 using OpenQA.Selenium.BiDi.Log;
@@ -19,37 +20,37 @@ namespace MarsAutomation.StepDefinitions
         public void GivenIEnterValidCredentials()
         {   
             driver = new ChromeDriver();
-            LoginPage loginPage = new LoginPage();
-            loginPage.EnterCredentials(driver, "susmitha.pinki@gmail.com", "123123#");
+            LoginPage loginPage = new LoginPage(driver);
+            loginPage.EnterCredentials("susmitha.pinki@gmail.com", "123123#");
         }
 
         [Given(@"I enter username ""(.*)"" and password ""(.*)""")]
         public void GivenIEnterInvalidCredentials(string username, string password)
         {
             driver = new ChromeDriver();
-            LoginPage loginPageObj = new LoginPage();
-            loginPageObj.EnterCredentials(driver, username, password);
+            LoginPage loginPageObj = new LoginPage(driver);
+            loginPageObj.EnterCredentials(username, password);
         }
 
         [When("I click the login button")]
         public void WhenIClickLogin()
         {
-            LoginPage loginPageObj = new LoginPage();
-            loginPageObj.ClickLogin(driver);
+            LoginPage loginPageObj = new LoginPage(driver);
+            loginPageObj.ClickLogin();
         }
 
         [Then("I should be logged in successfully")]
         public void ThenLoginShouldBeSuccessful()
         {
-            HomePage homePageObj = new HomePage();
-            Assert.That(homePageObj.IsLoggedIn(driver), "Login failed with valid credentials");
+            HomePage homePageObj = new HomePage(driver);
+            Assert.That(homePageObj.IsLoggedIn(), "Login failed with valid credentials");
         }
 
         [Then("an error message should be displayed")]
         public void ThenErrorMessageShouldBeDisplayed()
         {
-            LoginPage loginPageObj = new LoginPage();
-            string message = loginPageObj.GetLoginErrorMessage(driver);
+            LoginPage loginPageObj = new LoginPage(driver);
+            string message = loginPageObj.GetLoginErrorMessage();
 
           Assert.That(
                       message.Contains("Invalid") ||
@@ -64,62 +65,82 @@ namespace MarsAutomation.StepDefinitions
         [Given("I login Mars portal Successfully")]
         public void GivenILoginMarsPortalSuccessfully()
         {
-            driver = new ChromeDriver();
-            //Login Page object initialisation and definition
-            LoginPage LoginPageObj = new LoginPage();
-            LoginPageObj.LoginActions(driver);
+            //No need to add Code here-- Hooks already logged in
+           
 
         }
 
         [When("I navigate to language page")]
         public void WhenINavigateToLanguagePage()
         {
-            HomePage HomePageObj = new HomePage();
-            HomePageObj.NavigateToLanguages(driver);
+            HomePage HomePageObj = new HomePage(driver);
+            HomePageObj.NavigateToLanguages();
         }
 
-        [When("I create Language record")]
-        public void WhenICreateLanguageRecord()
+     
+
+        [Given("I am on the language page")]
+        public void GivenIAmOnTheLanguagePage()
+        {
+            HomePage HomePageObj = new HomePage(driver);
+            HomePageObj.NavigateToLanguages();
+        }
+
+        [When("I create a language {string} with level {string}")]
+        public void WhenICreateALanguageWithLevel(string newLanguage, string newLevel)
         {
             LanguagePage LanguagePageObj = new LanguagePage(driver);
-            LanguagePageObj.CreateLanguageRecord(driver);
+            LanguagePageObj.AddLanguage(newLanguage, newLevel);
+            TestDataManager.AddLanguage(newLanguage);
 
         }
 
-        [Then("the record should be created successfully")]
-        public void ThenTheRecordShouldBeCreatedSuccessfully()
+        [Then("the language {string}with Level {string} should be created")]
+        public void ThenTheLanguageWithLevelShouldBeCreated(string newLanguage, string newLevel)
         {
-            LanguagePage languagePageObj = new LanguagePage(driver);  
-            
-            // create record Assertions
-            String newLanguage = languagePageObj.GetLanguage(driver);
-            Assert.That(newLanguage == "Tulu", "Actual Language and expected Language is do not match");
-            String newLevel= languagePageObj.GetLevel(driver);
-            Assert.That(newLevel == "Fluent", "Actual Level and expected Level is do not match");
-        }
 
-
-        [When("I edit the language {string} to {string} with {string}")]
-        public void WhenIEditTheLanguageToWith(string existingLangauge, string newLangauge, string newLevel)
-        {
             LanguagePage languagePageObj = new LanguagePage(driver);
-            languagePageObj.EditLanguageRecord(driver, existingLangauge, newLangauge, newLevel);
-
-
-        }
-
-        [Then("the Language record should be updated to {string} with level {string}")]
-        public void ThenTheLanguageRecordShouldBeUpdatedToWithLevel(string newLanguage, string newLevel)
-        {
-            LanguagePage languagePageObj = new LanguagePage(driver);
-
-            string actualLanguage = languagePageObj.GetUpdatedLanguage(driver, newLanguage);
+            string actualLanguage = languagePageObj.GetLanguage(newLanguage);
             Assert.That(actualLanguage == newLanguage, $"Expected Skill: {newLanguage}, but got: {actualLanguage}");
 
-            string actualLevel = languagePageObj.GetUpdatedLanguageLevel(driver, newLevel);
+            string actualLevel = languagePageObj.GetLevel(newLevel);
             Assert.That(actualLevel == newLevel, $"Expected Level: {newLevel}, but got: {actualLevel}");
+        }
+
+
+
+        [When("I add a language {string} with level {string}")]
+        public void WhenIAddALanguageWithLevel(string newLanguage, string newLevel)
+        {
+            LanguagePage LanguagePageObj = new LanguagePage(driver);
+            LanguagePageObj.AddLanguage(newLanguage, newLevel);
+            TestDataManager.AddLanguage(newLanguage);
 
         }
+
+        [When("I update the language {string} to {string} with level {string}")]
+        public void WhenIUpdateTheLanguageToWithLevel(string existingLanguage, string updatedLanguage, string updatedLevel)
+        {
+            LanguagePage languagePageObj = new LanguagePage(driver);
+            languagePageObj.EditLanguageRecord(existingLanguage, updatedLanguage,updatedLevel);
+            // Track the updated language for cleanup
+            TestDataManager.AddLanguage(updatedLanguage);
+
+
+
+        }
+
+        [Then("the language {string} with level {string} should be displayed")]
+        public void ThenTheLanguageWithLevelShouldBeDisplayed(string updatedLanguage, string updatedLevel)
+        {
+            LanguagePage languagePageObj = new LanguagePage(driver); 
+            string actualLanguage = languagePageObj.GetUpdatedLanguage(updatedLanguage);
+            Assert.That(actualLanguage == updatedLanguage, $"Expected Skill: {updatedLanguage}, but got: {actualLanguage}");
+
+            string actualLevel = languagePageObj.GetUpdatedLanguageLevel(driver, updatedLevel);
+            Assert.That(actualLevel == updatedLevel, $"Expected Level: {updatedLevel}, but got: {actualLevel}");
+        }
+
 
 
 
@@ -127,7 +148,7 @@ namespace MarsAutomation.StepDefinitions
         public void WhenIDeleteTheLanguage(string langauge)
         {
             LanguagePage languagePageObj = new LanguagePage(driver);
-            languagePageObj.DeleteLanguageRecord(driver, langauge);
+            languagePageObj.DeleteLanguageRecord(langauge);
        
         }
 
@@ -136,11 +157,9 @@ namespace MarsAutomation.StepDefinitions
         public void ThenTheReordShouldBeDeletedSuccessfully(string Language)
         {
             LanguagePage languagePageObj = new LanguagePage(driver);
-            Assert.That(languagePageObj.IsLanguageDeleted(driver, Language),
+            Assert.That(languagePageObj.IsLanguageDeleted(Language),
                 "Language record was not deleted");
         }
-
-
 
 
 
@@ -148,7 +167,7 @@ namespace MarsAutomation.StepDefinitions
         public void WhenIAddLanguagesUntilLimit()
         {
             LanguagePage languagePageObj = new LanguagePage(driver);
-            int currentCount = languagePageObj.GetLanguageCount(driver);
+            int currentCount = languagePageObj.GetLanguageCount();
 
             int slotsLeft = 4 - currentCount;
             string[] languages = { "Marathi", "Italian", "Tamil", "Telugu", "Hindi", "French" };
@@ -156,7 +175,7 @@ namespace MarsAutomation.StepDefinitions
 
             for (int i = 0; i < slotsLeft; i++)
             {
-                languagePageObj.AddLanguage(driver, languages[i], levels[i]);
+                languagePageObj.AddLanguage(languages[i], levels[i]);
             }
         }
 
@@ -172,7 +191,7 @@ namespace MarsAutomation.StepDefinitions
         public void WhenITryToAddTheLanguageWithLevelAgain(string language, string level)
         {
             LanguagePage languagePageObj = new LanguagePage(driver);
-            languagePageObj.AddDuplicateLanguage(driver, language, level);
+            languagePageObj.AddDuplicateLanguage(language, level);
 
         }
 

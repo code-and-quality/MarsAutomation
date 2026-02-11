@@ -8,6 +8,8 @@ public class Wait
 {
     //generic function wait for an element to be clickable
 
+
+
     public static void WaitToBeClickable(IWebDriver driver, string locatorType, string locatorValue, int seconds)
     {
 

@@ -22,11 +22,37 @@ namespace MarsAutomations.Pages
             SkillsTab.Click();
             Wait.WaitToBeClickable(driver, "XPath", "//a[@data-tab='second']", 4);
         }
+        //Add Skill
+        public void AddSkill(string skill, string level)
+        {
+            // Find Add New button
+            var addNewButtons = driver.FindElements(By.XPath("//table[.//th[text()='Skill']]//div[contains(@class,'ui teal button')]"));
+
+            // If button does not exist OR is not visible OR is disabled → stop
+            if (addNewButtons.Count == 0 || !addNewButtons[0].Displayed || !addNewButtons[0].Enabled)
+                return;
+
+            // Wait until clickable
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(addNewButtons[0]));
+
+            // Click Add New
+            addNewButtons[0].Click();
+
+            // Fill language
+            driver.FindElement(By.Name("name")).SendKeys(skill);
+
+            // Select level
+            driver.FindElement(By.Name("level")).Click();
+            driver.FindElement(By.XPath($"//option[normalize-space()='{level}']")).Click();
+
+            // Click Add
+            driver.FindElement(By.XPath("//input[@value='Add']")).Click();
+        }
 
         //Create a Skill Record
-        public void CreateSkillsRecord(IWebDriver driver)
+        public void CreateSkillsRecord()
         {
-
 
             // Naviagate to Skills Tab
 
@@ -76,25 +102,30 @@ namespace MarsAutomations.Pages
 
             
         }
-        public string GetSkill(IWebDriver driver)
+
+        public string GetSkill(string expectedSkill)
         {
-            IWebElement newSkill = driver.FindElement(By.XPath("((//th[normalize-space()='Skill']\r\n " +
-                   "     /ancestor::table[1]\r\n    " +
-                   "  //tbody/tr[td[normalize-space()]]\r\n)[last()]/td[1])"));
-            return newSkill.Text;
+            try
+            {
+                string xpath = $"//table/tbody/tr/td[normalize-space()='{expectedSkill}']";
+                return driver.FindElement(By.XPath(xpath)).Text.Trim();
+            }
+            catch (NoSuchElementException)
+            {
+                Console.WriteLine($"Skill '{expectedSkill}' not found in table.");
+                return string.Empty;
+            }
         }
-        public string GetLevel(IWebDriver driver)
+
+        public String GetLevel(string newLevel)
         {
-            IWebElement newLevel = driver.FindElement(By.XPath("((//th[normalize-space()='Skill']\r\n    " +
-                 "  /ancestor::table[1]\r\n    " +
-                 "  //tbody/tr[td[normalize-space()]]\r\n)[last()]/td[2])"));
-            return newLevel.Text;
+            IWebElement createdLevel = driver.FindElement(By.XPath($"//table[.//th[normalize-space()='Skill']]//td[normalize-space()='{newLevel}']"));
+            return createdLevel.Text;
 
         }
+   
 
-
-
-        public void EditSkillRecord(IWebDriver driver, string existingSkill, string newSkill, string newLevel)
+        public void EditSkillRecord(string existingSkill, string newSkill, string newLevel)
         {
             try
             { //Naviagate to LanguageTab
@@ -136,7 +167,7 @@ namespace MarsAutomations.Pages
 
         
 
-        public string GetUpdatedSkill(IWebDriver driver, string expectedSkill)
+        public string GetUpdatedSkill(string expectedSkill)
         {
             IWebElement updatedSkill = driver.FindElement(
                 By.XPath($"//table[.//th[normalize-space()='Skill']]//td[normalize-space()='{expectedSkill}']")
@@ -144,13 +175,33 @@ namespace MarsAutomations.Pages
 
             return updatedSkill.Text;
         }
-        public String GetUpdatedSkillsLevel(IWebDriver driver, string expectedLevel)
+        public String GetUpdatedSkillsLevel(string expectedLevel)
         {
             IWebElement updatedLevel = driver.FindElement(By.XPath($"//table[.//th[normalize-space()='Skill']]//td[normalize-space()='{expectedLevel}']"));
             return updatedLevel.Text;
 
         }
-        public void DeleteSkillRecord(IWebDriver driver,string skillToDelete)
+        public void DeleteSkill(string skill)
+        {
+            try
+            {
+                string deleteXPath =
+                    $"//table/tbody/tr[td[1][normalize-space()='{skill}']]/td[3]/span[2]/i";
+
+                IWebElement deleteButton = driver.FindElement(By.XPath(deleteXPath));
+                deleteButton.Click();
+
+                Thread.Sleep(500); // allow UI to refresh
+            }
+            catch (NoSuchElementException)
+            {
+                Console.WriteLine($"Skill '{skill}' not found for deletion.");
+            }
+        }
+
+         
+      
+        public void DeleteSkillRecord(string skillToDelete)
         {
             try
             {
@@ -172,7 +223,7 @@ namespace MarsAutomations.Pages
 
 
         }
-        public bool IsSkillDeleted(IWebDriver driver, string skill)
+        public bool IsSkillDeleted(string skill)
         {
             var rows = driver.FindElements(By.XPath(
                 $"//th[normalize-space()='Skill']/ancestor::table[1]" +
@@ -182,7 +233,7 @@ namespace MarsAutomations.Pages
             return rows.Count == 0;
         }
 
-        public void AddDuplicateSkill(IWebDriver driver, string skill, string level)
+        public void AddDuplicateSkill(string skill, string level)
         {
 
             // Navigate to Skills tab
@@ -207,10 +258,7 @@ namespace MarsAutomations.Pages
         }
 
       
-
-
-
-        public string GetDuplicateErrorMessage(IWebDriver driver)
+        public string GetDuplicateErrorMessage()
         {
             IWebElement message = driver.FindElement(By.XPath("//div[contains(@class,'ns-box') and contains(@class,'ns-show')]//div[@class='ns-box-inner']"));
             return message.Text;

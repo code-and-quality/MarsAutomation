@@ -7,8 +7,15 @@ namespace MarsAutomation.Pages;
 
 public class LoginPage
 {
+
+    private readonly IWebDriver driver;
+
+    public LoginPage(IWebDriver driver)
+    {
+        this.driver = driver;
+    }
     //Function that allows user to login to the website
-    public void SignIn(IWebDriver driver) 
+    public void SignIn() 
     {
         //Launch the portal
         driver.Navigate().GoToUrl("http://localhost:5003/");
@@ -23,10 +30,10 @@ public class LoginPage
     }
 
   
-     public void LoginActions(IWebDriver driver)
+     public void LoginActions()
      {
 
-         SignIn(driver);
+         SignIn();
 
           try
           {
@@ -58,9 +65,9 @@ public class LoginPage
          Thread.Sleep(2000);
      }
 
-    public void EnterCredentials(IWebDriver driver, string username, string password)
+    public void EnterCredentials(string username, string password)
     {
-        SignIn(driver);
+        SignIn();
         
         driver.FindElement(By.Name("email")).Clear();
         driver.FindElement(By.Name("email")).SendKeys(username);
@@ -69,14 +76,14 @@ public class LoginPage
         driver.FindElement(By.Name("password")).SendKeys(password);
     }
 
-    public void ClickLogin(IWebDriver driver)
+    public void ClickLogin()
     {
         driver.FindElement(By.XPath("//button[text()='Login']")).Click();
         Thread.Sleep(3000);
     }
 
 
-    public string GetLoginErrorMessage(IWebDriver driver)
+    public string GetLoginErrorMessage()
     {
         WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
 
