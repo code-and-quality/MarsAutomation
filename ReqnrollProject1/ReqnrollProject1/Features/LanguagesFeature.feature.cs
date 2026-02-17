@@ -367,9 +367,12 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
     await testRunner.WhenAsync("I navigate to language page", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 72
-    await testRunner.AndAsync(string.Format("I try to add the language \"{0}\" with level \"{1}\" again", language, level), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.WhenAsync(string.Format("I create a language \"{0}\" with level \"{1}\"", language, level), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 73
+    await testRunner.AndAsync(string.Format("I try to add the language \"{0}\" with level \"{1}\" again", language, level), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 74
     await testRunner.ThenAsync("a duplicate language warning should be displayed", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }

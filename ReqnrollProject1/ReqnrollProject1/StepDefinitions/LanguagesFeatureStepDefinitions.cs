@@ -1,8 +1,9 @@
+using MarsAutomation.Hooks;
 using MarsAutomation.Pages;
 using MarsAutomation.Utilities;
-using MarsAutomation.Hooks;
 using MarsAutomations.Pages;
 using NUnit.Framework;
+using OpenQA.Selenium;
 using OpenQA.Selenium.BiDi.Log;
 using OpenQA.Selenium.Chrome;
 using Reqnroll;
@@ -15,50 +16,63 @@ namespace MarsAutomation.StepDefinitions
     [Binding]
     public class LanguagesFeatureStepDefinitions : CommonDriver
     {
+        private readonly IWebDriver driver;
+        private LoginPage loginPage;
+        private HomePage homePage;
 
-        [Given("I enter valid username and password")]
-        public void GivenIEnterValidCredentials()
-        {   
-            driver = new ChromeDriver();
-            LoginPage loginPage = new LoginPage(driver);
-            loginPage.EnterCredentials("susmitha.pinki@gmail.com", "123123#");
+        public LanguagesFeatureStepDefinitions(CommonDriver commonDriver)
+        {
+            driver = commonDriver.driver;
+            loginPage = new LoginPage(driver);
         }
 
-        [Given(@"I enter username ""(.*)"" and password ""(.*)""")]
-        public void GivenIEnterInvalidCredentials(string username, string password)
+
+        [Given(@"I enter valid username and password")]
+        public void GivenIEnterValidUsernameAndPassword()
         {
-            driver = new ChromeDriver();
-            LoginPage loginPageObj = new LoginPage(driver);
-            loginPageObj.EnterCredentials(username, password);
+            loginPage = new LoginPage(driver);
+            loginPage.NavigateToPortal();
+            loginPage.ClickSignIn();
+
+            loginPage.EnterUsername("susmitha.pinki@gmail.com");
+            loginPage.EnterPassword("123123#");
         }
 
-        [When("I click the login button")]
-        public void WhenIClickLogin()
+        [Given(@"I enter username ""([^""]*)"" and password ""([^""]*)""")]
+        public void GivenIEnterUsernameAndPassword(string username, string password)
         {
-            LoginPage loginPageObj = new LoginPage(driver);
-            loginPageObj.ClickLogin();
+            loginPage = new LoginPage(driver);
+            loginPage.NavigateToPortal();
+            loginPage.ClickSignIn();
+
+            loginPage.EnterUsername(username);
+            loginPage.EnterPassword(password);
         }
 
-        [Then("I should be logged in successfully")]
-        public void ThenLoginShouldBeSuccessful()
+        //When
+
+        [When(@"I click the login button")]
+        public void WhenIClickTheLoginButton()
         {
-            HomePage homePageObj = new HomePage(driver);
-            Assert.That(homePageObj.IsLoggedIn(), "Login failed with valid credentials");
+            loginPage.ClickLogin();
         }
 
-        [Then("an error message should be displayed")]
-        public void ThenErrorMessageShouldBeDisplayed()
-        {
-            LoginPage loginPageObj = new LoginPage(driver);
-            string message = loginPageObj.GetLoginErrorMessage();
+        //Then
 
-          Assert.That(
-                      message.Contains("Invalid") ||
-                      message.Contains("incorrect") ||
-                      message.Contains("confirm") ||
-                      message.Contains("email"),
-                      "Expected login error message was not displayed"
-     );
+        [Then(@"I should be logged in successfully")]
+        public void ThenIShouldBeLoggedInSuccessfully()
+        {
+            homePage = new HomePage(driver);
+            Assert.That(homePage.IsLoggedIn(), Is.True,
+                 "Login failed: user is not logged in successfully");
+        }
+
+        [Then(@"an error message should be displayed")]
+        public void ThenAnErrorMessageShouldBeDisplayed()
+        {
+            string errorMessage = loginPage.GetLoginErrorMessage();
+            Assert.That(errorMessage, Is.Not.Empty,
+          "Expected error message was not displayed for invalid login");
         }
 
 
@@ -66,13 +80,21 @@ namespace MarsAutomation.StepDefinitions
         public void GivenILoginMarsPortalSuccessfully()
         {
             //No need to add Code here-- Hooks already logged in
-           
+            loginPage = new LoginPage(driver);
+            loginPage.NavigateToPortal();
+            loginPage.ClickSignIn();
+
+            loginPage.EnterUsername("susmitha.pinki@gmail.com");
+            loginPage.EnterPassword("123123#");
+            loginPage.ClickLogin();
+
 
         }
 
         [When("I navigate to language page")]
         public void WhenINavigateToLanguagePage()
         {
+           
             HomePage HomePageObj = new HomePage(driver);
             HomePageObj.NavigateToLanguages();
         }
@@ -82,6 +104,13 @@ namespace MarsAutomation.StepDefinitions
         [Given("I am on the language page")]
         public void GivenIAmOnTheLanguagePage()
         {
+            loginPage = new LoginPage(driver);
+            loginPage.NavigateToPortal();
+            loginPage.ClickSignIn();
+
+            loginPage.EnterUsername("susmitha.pinki@gmail.com");
+            loginPage.EnterPassword("123123#");
+            loginPage.ClickLogin();
             HomePage HomePageObj = new HomePage(driver);
             HomePageObj.NavigateToLanguages();
         }
@@ -122,7 +151,7 @@ namespace MarsAutomation.StepDefinitions
         public void WhenIUpdateTheLanguageToWithLevel(string existingLanguage, string updatedLanguage, string updatedLevel)
         {
             LanguagePage languagePageObj = new LanguagePage(driver);
-            languagePageObj.EditLanguageRecord(existingLanguage, updatedLanguage,updatedLevel);
+            languagePageObj.EditLanguage(existingLanguage, updatedLanguage,updatedLevel);
             // Track the updated language for cleanup
             TestDataManager.AddLanguage(updatedLanguage);
 
@@ -137,7 +166,7 @@ namespace MarsAutomation.StepDefinitions
             string actualLanguage = languagePageObj.GetUpdatedLanguage(updatedLanguage);
             Assert.That(actualLanguage == updatedLanguage, $"Expected Skill: {updatedLanguage}, but got: {actualLanguage}");
 
-            string actualLevel = languagePageObj.GetUpdatedLanguageLevel(driver, updatedLevel);
+            string actualLevel = languagePageObj.GetUpdatedLanguageLevel(updatedLevel);
             Assert.That(actualLevel == updatedLevel, $"Expected Level: {updatedLevel}, but got: {actualLevel}");
         }
 
@@ -183,7 +212,7 @@ namespace MarsAutomation.StepDefinitions
         public void ThenAddNewButtonShouldNotBeVisible()
         {
             LanguagePage languagePageObj = new LanguagePage(driver);
-            Assert.That(!languagePageObj.IsAddNewButtonVisible(driver), "Add New button is still visible after reaching the limit");
+            Assert.That(!languagePageObj.IsAddNewButtonVisible(), "Add New button is still visible after reaching the limit");
         }
 
 

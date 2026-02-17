@@ -29,9 +29,10 @@ Then the skill "<newSkill>"with Level "<newLevel>" should be created
 
 
 Examples: 
-| newSkill      | newLevel |
-| JAVA         |    Beginner   |
-| SQL      |   Expert   |
+| newSkill | newLevel |
+| SQL      | Expert   |
+| C        | Beginner |
+| JAVA         |    Expert      |
 
 
 Scenario Outline: Edit a Skill record
@@ -64,6 +65,7 @@ Scenario Outline: Delete an Skill record
 Scenario Outline: prevent adding duplicate skill
     Given I login Mars portal Successfully
     When I navigate to skills page
+    When I add a skill "<skill>" with level "<Level>"
     And I try to add the skill "<skill>" with level "<Level>" again
     Then a duplicate skill warning should be displayed
 

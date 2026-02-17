@@ -69,6 +69,7 @@ Scenario: User cannot add more than four languages
 Scenario Outline: prevent adding duplicate language
     Given I login Mars portal Successfully
     When I navigate to language page
+    When I create a language "<Language>" with level "<Level>"
     And I try to add the language "<Language>" with level "<Level>" again
     Then a duplicate language warning should be displayed
 

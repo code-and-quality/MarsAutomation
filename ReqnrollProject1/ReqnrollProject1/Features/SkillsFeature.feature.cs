@@ -106,7 +106,7 @@ namespace MarsAutomation.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/SkillsFeature.feature.ndjson", 13);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/SkillsFeature.feature.ndjson", 14);
         }
         
         [global::NUnit.Framework.TestAttribute()]
@@ -184,8 +184,9 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Create a skill with Valid data")]
-        [global::NUnit.Framework.TestCaseAttribute("JAVA", "Beginner", "4", null)]
-        [global::NUnit.Framework.TestCaseAttribute("SQL", "Expert", "5", null)]
+        [global::NUnit.Framework.TestCaseAttribute("SQL", "Expert", "4", null)]
+        [global::NUnit.Framework.TestCaseAttribute("C", "Beginner", "5", null)]
+        [global::NUnit.Framework.TestCaseAttribute("JAVA", "Expert", "6", null)]
         public async global::System.Threading.Tasks.Task CreateASkillWithValidData(string newSkill, string newLevel, string @__pickleIndex, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
@@ -221,8 +222,8 @@ await testRunner.ThenAsync(string.Format("the skill \"{0}\"with Level \"{1}\" sh
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Edit a Skill record")]
-        [global::NUnit.Framework.TestCaseAttribute("DotNet", "Beginner", "PLSQL", "Expert", "6", null)]
-        [global::NUnit.Framework.TestCaseAttribute("Gherkin", "Beginner", "Pearl", "Expert", "7", null)]
+        [global::NUnit.Framework.TestCaseAttribute("DotNet", "Beginner", "PLSQL", "Expert", "7", null)]
+        [global::NUnit.Framework.TestCaseAttribute("Gherkin", "Beginner", "Pearl", "Expert", "8", null)]
         public async global::System.Threading.Tasks.Task EditASkillRecord(string newSkill, string newLevel, string updatedSkill, string updatedLevel, string @__pickleIndex, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
@@ -235,7 +236,7 @@ await testRunner.ThenAsync(string.Format("the skill \"{0}\"with Level \"{1}\" sh
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Edit a Skill record", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 37
+#line 38
 this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -245,16 +246,16 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 38
+#line 39
 await testRunner.GivenAsync("I am on the skills page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 39
+#line 40
 await testRunner.WhenAsync(string.Format("I add a skill \"{0}\" with level \"{1}\"", newSkill, newLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 40
+#line 41
 await testRunner.AndAsync(string.Format("I edit the skill \"{0}\" to \"{1}\" with \"{2}\"", newSkill, updatedSkill, updatedLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 41
+#line 42
 await testRunner.ThenAsync(string.Format("the Skill record should be updated to \"{0}\" with level \"{1}\"", updatedSkill, updatedLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
@@ -263,8 +264,8 @@ await testRunner.ThenAsync(string.Format("the Skill record should be updated to 
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Delete an Skill record")]
-        [global::NUnit.Framework.TestCaseAttribute("JAVA", "Beginner", "8", null)]
-        [global::NUnit.Framework.TestCaseAttribute("SQL", "Expert", "9", null)]
+        [global::NUnit.Framework.TestCaseAttribute("JAVA", "Beginner", "9", null)]
+        [global::NUnit.Framework.TestCaseAttribute("SQL", "Expert", "10", null)]
         public async global::System.Threading.Tasks.Task DeleteAnSkillRecord(string newSkill, string newLevel, string @__pickleIndex, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
@@ -275,7 +276,7 @@ await testRunner.ThenAsync(string.Format("the Skill record should be updated to 
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Delete an Skill record", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 51
+#line 52
 this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -285,16 +286,16 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 52
+#line 53
   await testRunner.GivenAsync("I am on the skills page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 53
+#line 54
   await testRunner.WhenAsync(string.Format("I add a skill \"{0}\" with level \"{1}\"", newSkill, newLevel), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 54
+#line 55
   await testRunner.WhenAsync(string.Format("I delete the skill \"{0}\"", newSkill), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 55
+#line 56
   await testRunner.ThenAsync(string.Format("the \"{0}\" skill record should be removed successfully", newSkill), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
@@ -303,7 +304,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("prevent adding duplicate skill")]
-        [global::NUnit.Framework.TestCaseAttribute("Python", "Beginner", "10", null)]
+        [global::NUnit.Framework.TestCaseAttribute("Python", "Beginner", "11", null)]
         public async global::System.Threading.Tasks.Task PreventAddingDuplicateSkill(string skill, string level, string @__pickleIndex, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
@@ -314,7 +315,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("prevent adding duplicate skill", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 64
+#line 65
 this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -324,16 +325,19 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 65
+#line 66
     await testRunner.GivenAsync("I login Mars portal Successfully", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 66
+#line 67
     await testRunner.WhenAsync("I navigate to skills page", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 67
+#line 68
+    await testRunner.WhenAsync(string.Format("I add a skill \"{0}\" with level \"{1}\"", skill, level), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 69
     await testRunner.AndAsync(string.Format("I try to add the skill \"{0}\" with level \"{1}\" again", skill, level), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 68
+#line 70
     await testRunner.ThenAsync("a duplicate skill warning should be displayed", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }

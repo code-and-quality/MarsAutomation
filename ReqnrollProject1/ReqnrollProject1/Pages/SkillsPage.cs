@@ -1,268 +1,209 @@
-﻿using MarsAutomation.Utilities;
-using NUnit.Framework;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
+using System;
 
 namespace MarsAutomations.Pages
 {
     public class SkillsPage
     {
-        // Naviagate the Language Tab
         private readonly IWebDriver driver;
+        private readonly WebDriverWait wait;
 
+        // -----------------------------
+        // LOCATORS
+        // -----------------------------
+        private readonly By skillsTab = By.XPath("//a[@data-tab='second']");
+        private readonly By addNewButton = By.XPath("//table[.//th[text()='Skill']]//div[contains(@class,'ui teal button')]");
+        private readonly By skillTextbox = By.Name("name");
+        private readonly By levelDropdown = By.Name("level");
+        private readonly By addButton = By.XPath("//input[@value='Add']");
+        private readonly By updateButton = By.XPath("//input[@value='Update']");
+        private readonly By notificationMessage = By.XPath("//div[contains(@class,'ns-box') and contains(@class,'ns-show')]//div[@class='ns-box-inner']");
+
+        // Dynamic locators
+        private By SkillRow(string skill) =>
+            By.XPath($"//tbody/tr[td[1][normalize-space()='{skill}']]");
+
+        private By SkillCell(string skill) =>
+            By.XPath($"//table[.//th='Skill']//td[normalize-space()='{skill}']");
+
+        private By LevelCell(string level) =>
+            By.XPath($"//table[.//th='Skill']//td[normalize-space()='{level}']");
+
+        private By EditButton(string skill) =>
+            By.XPath($"//tbody/tr[td[1][normalize-space()='{skill}']]//i[contains(@class,'write')]");
+
+        private By DeleteButton(string skill) =>
+            By.XPath($"//tbody/tr[td[1][normalize-space()='{skill}']]//i[contains(@class,'remove')]");
+
+        private By UpdatedSkillCell(string skill) =>
+        By.XPath($"//table[.//th[normalize-space()='Skill']]//td[normalize-space()='{skill}']");
+
+        private By UpdatedLevelCell(string level) =>
+            By.XPath($"//table[.//th[normalize-space()='Skill']]//td[normalize-space()='{level}']");
+
+        // -----------------------------
+        // CONSTRUCTOR
+        // -----------------------------
         public SkillsPage(IWebDriver driver)
         {
             this.driver = driver;
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
         }
+
+        // -----------------------------
+        // METHODS
+        // -----------------------------
+
         public void GoToSkillsTab()
         {
-            IWebElement SkillsTab =
-            driver.FindElement(
-                By.XPath("//a[@data-tab='second']"));
-            SkillsTab.Click();
-            Wait.WaitToBeClickable(driver, "XPath", "//a[@data-tab='second']", 4);
+            wait.Until(ExpectedConditions.ElementToBeClickable(skillsTab)).Click();
         }
-        //Add Skill
+
+        public int GetSkillCount()
+        {
+            var rows = driver.FindElements(By.XPath("//th[normalize-space()='Skill']/ancestor::table[1]//tbody/tr"));
+            return rows.Count;
+        }
+
         public void AddSkill(string skill, string level)
         {
-            // Find Add New button
-            var addNewButtons = driver.FindElements(By.XPath("//table[.//th[text()='Skill']]//div[contains(@class,'ui teal button')]"));
+            GoToSkillsTab();
 
-            // If button does not exist OR is not visible OR is disabled → stop
-            if (addNewButtons.Count == 0 || !addNewButtons[0].Displayed || !addNewButtons[0].Enabled)
-                return;
+            wait.Until(ExpectedConditions.ElementToBeClickable(addNewButton)).Click();
 
-            // Wait until clickable
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(addNewButtons[0]));
+            var textbox = wait.Until(ExpectedConditions.ElementIsVisible(skillTextbox));
+            textbox.Clear();
+            textbox.SendKeys(skill);
 
-            // Click Add New
-            addNewButtons[0].Click();
-
-            // Fill language
-            driver.FindElement(By.Name("name")).SendKeys(skill);
-
-            // Select level
-            driver.FindElement(By.Name("level")).Click();
+            wait.Until(ExpectedConditions.ElementToBeClickable(levelDropdown)).Click();
             driver.FindElement(By.XPath($"//option[normalize-space()='{level}']")).Click();
 
-            // Click Add
-            driver.FindElement(By.XPath("//input[@value='Add']")).Click();
+            wait.Until(ExpectedConditions.ElementToBeClickable(addButton)).Click();
         }
 
-        //Create a Skill Record
-        public void CreateSkillsRecord()
+        public string GetSkill(string skill)
         {
-
-            // Naviagate to Skills Tab
-
-            try
-            {
-                GoToSkillsTab();
-
-
-                //naviagate the Add New button
-
-                IWebElement addButtontab = driver.FindElement(By.XPath("//table[.//th[text()='Skill']]//div[contains(@class,'ui teal button')]"));
-
-                //Click on the Add New
-                addButtontab.Click();
-            }
-            catch
-            {
-                Assert.Fail(" Add button has not been found");
-            }
-
-            //naviagte and Type Language into the Add language
-            IWebElement addSkillTextbox = driver.FindElement(By.XPath("//input[@placeholder='Add Skill']"));
-
-            addSkillTextbox.SendKeys("JAVA");
-
-            //Select "Choose languages level" from the drop down
-
-            IWebElement SkillLevelDropdown = driver.FindElement(By.XPath("//select[@name='level']"));
-            //Create a SelectElement object
-            SelectElement selectLevel = new SelectElement(SkillLevelDropdown);
-
-            // Select by visible text (e.g., "Beginner", "Intermediate", "Expert")
-            selectLevel.SelectByText("Expert");
-
-
-            //languageLevelDropdown.Click();
-
-
-            //Navigate the Add button and Click
-            IWebElement addTab = driver.FindElement(By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[3]/div/div[2]/div/div/span/input[1]"));
-            addTab.Click();
-            Thread.Sleep(3000);
-
-            IWebElement createdSkill = driver.FindElement(By.XPath("//tr[td[text()='JAVA']]/td[1]"));
-
-            Assert.That(createdSkill.Text == "JAVA", "New Language record has not been created");
-
-            
+            return wait.Until(ExpectedConditions.ElementIsVisible(SkillCell(skill))).Text;
         }
 
-        public string GetSkill(string expectedSkill)
+        public string GetLevel(string level)
         {
-            try
-            {
-                string xpath = $"//table/tbody/tr/td[normalize-space()='{expectedSkill}']";
-                return driver.FindElement(By.XPath(xpath)).Text.Trim();
-            }
-            catch (NoSuchElementException)
-            {
-                Console.WriteLine($"Skill '{expectedSkill}' not found in table.");
-                return string.Empty;
-            }
+            return wait.Until(ExpectedConditions.ElementIsVisible(LevelCell(level))).Text;
         }
 
-        public String GetLevel(string newLevel)
+        public void EditSkill(string existingSkill, string newSkill, string newLevel)
         {
-            IWebElement createdLevel = driver.FindElement(By.XPath($"//table[.//th[normalize-space()='Skill']]//td[normalize-space()='{newLevel}']"));
-            return createdLevel.Text;
+            GoToSkillsTab();
 
+            wait.Until(ExpectedConditions.ElementToBeClickable(EditButton(existingSkill))).Click();
+
+            var textbox = wait.Until(ExpectedConditions.ElementIsVisible(skillTextbox));
+            textbox.Clear();
+            textbox.SendKeys(newSkill);
+
+            wait.Until(ExpectedConditions.ElementToBeClickable(levelDropdown)).Click();
+            driver.FindElement(By.XPath($"//option[normalize-space()='{newLevel}']")).Click();
+
+            wait.Until(ExpectedConditions.ElementToBeClickable(updateButton)).Click();
         }
-   
-
         public void EditSkillRecord(string existingSkill, string newSkill, string newLevel)
         {
-            try
-            { //Naviagate to LanguageTab
-                GoToSkillsTab();
-               
+            GoToSkillsTab();
 
-                // Click Edit button (adjust selector as needed)
-                IWebElement editButton = driver.FindElement(By.XPath(
-               $"//th[normalize-space()='Skill']/ancestor::table[1]" +
-               $"//tbody/tr[td[1][normalize-space()='{existingSkill}']]//i[contains(@class,'write')]"
-           ));
-                editButton.Click();
-            }
+            // Click edit icon
+            var editBtn = wait.Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(
+                    EditButton(existingSkill)
+                )
+            );
+            editBtn.Click();
 
-            catch (Exception ex)
-            {
-                Assert.Fail("Edit button has been not located");
-
-            }
-
-            // Update Skill
-            IWebElement languageTextbox = driver.FindElement(By.Name("name"));
-            languageTextbox.Clear();
-            languageTextbox.SendKeys(newSkill);
+            // Update skill name
+            var textbox = wait.Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(skillTextbox)
+            );
+            textbox.Clear();
+            textbox.SendKeys(newSkill);
 
             // Update level
-            IWebElement levelDropdown = driver.FindElement(By.Name("level"));
-            levelDropdown.Click();
+            wait.Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(levelDropdown)
+            ).Click();
+
             driver.FindElement(By.XPath($"//option[normalize-space()='{newLevel}']")).Click();
 
             // Save
-            driver.FindElement(By.XPath("//input[@value='Update']")).Click();
-
-           
-            Thread.Sleep(5000);
-
-            
+            wait.Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(updateButton)
+            ).Click();
         }
-
-        
 
         public string GetUpdatedSkill(string expectedSkill)
         {
-            IWebElement updatedSkill = driver.FindElement(
-                By.XPath($"//table[.//th[normalize-space()='Skill']]//td[normalize-space()='{expectedSkill}']")
+            var element = wait.Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(
+                    UpdatedSkillCell(expectedSkill)
+                )
             );
 
-            return updatedSkill.Text;
+            return element.Text;
         }
-        public String GetUpdatedSkillsLevel(string expectedLevel)
-        {
-            IWebElement updatedLevel = driver.FindElement(By.XPath($"//table[.//th[normalize-space()='Skill']]//td[normalize-space()='{expectedLevel}']"));
-            return updatedLevel.Text;
 
+        public string GetUpdatedSkillsLevel(string expectedLevel)
+        {
+            var element = wait.Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(
+                    UpdatedLevelCell(expectedLevel)
+                )
+            );
+
+            return element.Text;
         }
         public void DeleteSkill(string skill)
         {
-            try
-            {
-                string deleteXPath =
-                    $"//table/tbody/tr[td[1][normalize-space()='{skill}']]/td[3]/span[2]/i";
-
-                IWebElement deleteButton = driver.FindElement(By.XPath(deleteXPath));
-                deleteButton.Click();
-
-                Thread.Sleep(500); // allow UI to refresh
-            }
-            catch (NoSuchElementException)
-            {
-                Console.WriteLine($"Skill '{skill}' not found for deletion.");
-            }
-        }
-
-         
-      
-        public void DeleteSkillRecord(string skillToDelete)
-        {
-            try
-            {
-                GoToSkillsTab();
-
-                // Click delete icon for the row matching the language
-                IWebElement deleteButton = driver.FindElement(By.XPath(
-                     $"//table[.//th[normalize-space()='Skill']]//tr[td[1][normalize-space()='{skillToDelete}']]//i[contains(@class,'remove')]"));
-                deleteButton.Click();
-                Thread.Sleep(3000);
-
-            }
-            catch (Exception ex)
-
-            {
-                Assert.Fail("Delete button has been not located");
-            }
-
-
-
-        }
-        public bool IsSkillDeleted(string skill)
-        {
-            var rows = driver.FindElements(By.XPath(
-                $"//th[normalize-space()='Skill']/ancestor::table[1]" +
-                $"//tbody/tr[td[1][normalize-space()='{skill}']]"
-            ));
-
-            return rows.Count == 0;
-        }
-
-        public void AddDuplicateSkill(string skill, string level)
-        {
-
-            // Navigate to Skills tab
             GoToSkillsTab();
 
-            // Click Add New
-            driver.FindElement(By.XPath("//table[.//th[text()='Skill']]//div[contains(@class,'ui teal button')]")).Click();
+            var deleteButtons = driver.FindElements(DeleteButton(skill));
 
-            // Enter skill
-            IWebElement skillTextbox = driver.FindElement(By.Name("name"));
-            skillTextbox.Clear();
-            skillTextbox.SendKeys(skill);
+            if (deleteButtons.Count == 0)
+                return; // Already deleted or not present
 
-            // Select level
-            IWebElement levelDropdown = driver.FindElement(By.Name("level"));
-            levelDropdown.Click();
-            driver.FindElement(By.XPath($"//option[normalize-space()='{level}']")).Click();
-           
-            // Click Add
-            driver.FindElement(By.XPath("//input[@value='Add']")).Click();
-
+            wait.Until(ExpectedConditions.ElementToBeClickable(deleteButtons[0])).Click();
         }
 
-      
-        public string GetDuplicateErrorMessage()
+        public bool IsSkillDeleted(string skill)
         {
-            IWebElement message = driver.FindElement(By.XPath("//div[contains(@class,'ns-box') and contains(@class,'ns-show')]//div[@class='ns-box-inner']"));
-            return message.Text;
+            return driver.FindElements(SkillRow(skill)).Count == 0;
+        }
+        public void AddDuplicateSkill(string skill, string level)
+        {
+            GoToSkillsTab();
+
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(addNewButton))
+                .Click();
+
+            var textbox = wait.Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(skillTextbox)
+            );
+            textbox.Clear();
+            textbox.SendKeys(skill);
+
+            wait.Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(levelDropdown)
+            ).Click();
+
+            driver.FindElement(By.XPath($"//option[normalize-space()='{level}']")).Click();
+
+            wait.Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(addButton)
+            ).Click();
+        }
+
+        public string GetNotificationMessage()
+        {
+            return wait.Until(ExpectedConditions.ElementIsVisible(notificationMessage)).Text;
         }
     }
 }
-

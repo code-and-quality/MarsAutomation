@@ -5,23 +5,22 @@ using OpenQA.Selenium.Chrome;
 
 namespace MarsAutomation.Utilities
 {
-    public class CommonDriver
-    {
-        public static IWebDriver driver ;
-        public void SetUpSteps()
+        public class CommonDriver
         {
-            driver = new ChromeDriver();
+            public IWebDriver driver;
 
-            // Login
-            LoginPage loginPageObj = new LoginPage(driver);
-            loginPageObj.LoginActions();
+            public void InitializeDriver()
+            {
+                driver = new ChromeDriver();
+                driver.Manage().Window.Maximize();
+            }
 
-         }
-
-        public void CloseDriver()
-        {
-            driver.Quit();
+            public void CloseDriver()
+            {
+                driver.Quit();
+            }
         }
-
     }
-}
+
+
+

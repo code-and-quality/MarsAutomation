@@ -2,6 +2,7 @@ using MarsAutomation.Pages;
 using MarsAutomation.Utilities;
 using MarsAutomations.Pages;
 using NUnit.Framework;
+using OpenQA.Selenium;
 using OpenQA.Selenium.BiDi.Log;
 using Reqnroll;
 using System;
@@ -12,6 +13,16 @@ namespace MarsAutomation.StepDefinitions
     public class SkillsFeatureStepDefinitions : CommonDriver
 
     {
+        private readonly IWebDriver driver;
+        private LoginPage loginPage;
+        private HomePage homePage;
+
+        public SkillsFeatureStepDefinitions(CommonDriver commonDriver)
+        {
+            driver = commonDriver.driver;
+            loginPage = new LoginPage(driver);
+        }
+
         [When("I navigate to skills page")]
         public void WhenINavigateToSkillsPage()
         {
@@ -22,7 +33,13 @@ namespace MarsAutomation.StepDefinitions
         [Given("I am on the skills page")]
         public void GivenIAmOnTheSkillsPage()
         {
+            loginPage = new LoginPage(driver);
+            loginPage.NavigateToPortal();
+            loginPage.ClickSignIn();
 
+            loginPage.EnterUsername("susmitha.pinki@gmail.com");
+            loginPage.EnterPassword("123123#");
+            loginPage.ClickLogin();
             HomePage HomePageObj = new HomePage(driver);
             HomePageObj.NavigateToSkills();
         }

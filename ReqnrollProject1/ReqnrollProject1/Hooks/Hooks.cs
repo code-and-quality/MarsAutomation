@@ -1,66 +1,69 @@
 ﻿using MarsAutomation.Pages;
 using MarsAutomation.Utilities;
 using MarsAutomations.Pages;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Reqnroll;
 
 namespace MarsAutomation.Hooks
 {
     [Binding]
-    public class Hooks : CommonDriver
+    public class Hooks
     {
-        [BeforeTestRun]
-        public static void BeforeTestRun()
+        private readonly CommonDriver commonDriver;
+
+        public Hooks(CommonDriver commonDriver)
         {
-            // Clean all languages before ANY test starts
-            CommonDriver.driver = new ChromeDriver();
-            LoginPage login = new LoginPage(driver);
-            login.LoginActions();
-
-            //LanguagePage languagePageObj = new LanguagePage();
-            //languagePageObj.DeleteAllLanguages();
-
-            CommonDriver.driver.Quit();
+            this.commonDriver = commonDriver;
         }
 
         [BeforeScenario]
         public void BeforeScenario()
         {
-            SetUpSteps();   
-            // Opens browser, logs in, navigates to Languages
+            commonDriver.InitializeDriver();
         }
 
         [AfterScenario]
         public void AfterScenario()
         {
+            var driver = commonDriver.driver;
 
             // LANGUAGES CLEANUP
-            LanguagePage languagePageObj = new LanguagePage(driver);
-            foreach (var language in TestDataManager.LanguagesAdded)
+            if (TestDataManager.LanguagesAdded.Any())
             {
-                languagePageObj.DeleteLanguage(language);
+                var languagePage = new LanguagePage(driver);
+                languagePage.GoToLanguagesTab();
+
+                foreach (var language in TestDataManager.LanguagesAdded)
+                {
+                    if (!languagePage.IsLanguageDeleted(language))
+                    {
+                        languagePage.DeleteLanguage(language);
+                    }
+                }
+                
             }
 
             // SKILLS CLEANUP
-            SkillsPage skillsPageObj = new SkillsPage(driver);
-            foreach (var skill in TestDataManager.SkillsAdded)
+            if (TestDataManager.SkillsAdded.Any())
             {
-                skillsPageObj.DeleteSkill(skill);
+                var skillsPage = new SkillsPage(driver);
+                skillsPage.GoToSkillsTab();
+
+                foreach (var skill in TestDataManager.SkillsAdded)
+                {
+                    if (!skillsPage.IsSkillDeleted(skill))
+                    { 
+                    skillsPage.DeleteSkill(skill);
+                    }
+                }
             }
 
             // Clear test data for next scenario
             TestDataManager.Clear();
 
             // Quit browser AFTER cleanup
-            CloseDriver();
-
-           
+            commonDriver.CloseDriver();
         }
     }
 }
+
 
